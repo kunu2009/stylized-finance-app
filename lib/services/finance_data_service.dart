@@ -139,9 +139,28 @@ class FinanceDataService {
     _transactions.sort((a, b) => b.date.compareTo(a.date));
   }
 
+  // Update transaction
+  void updateTransaction(Transaction updatedTransaction) {
+    final index = _transactions.indexWhere((t) => t.id == updatedTransaction.id);
+    if (index != -1) {
+      _transactions[index] = updatedTransaction;
+      _transactions.sort((a, b) => b.date.compareTo(a.date));
+    }
+  }
+
+  // Delete transaction
+  void deleteTransaction(String id) {
+    _transactions.removeWhere((t) => t.id == id);
+  }
+
   // Add category
   void addCategory(Category category) {
     _categories.add(category);
+  }
+
+  // Delete category
+  void deleteCategory(String name) {
+    _categories.removeWhere((c) => c.name == name);
   }
 
   // Add savings goal

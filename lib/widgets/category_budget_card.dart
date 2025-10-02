@@ -9,14 +9,16 @@ class CategoryBudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -63,9 +65,10 @@ class CategoryBudgetCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             category.name,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -73,10 +76,10 @@ class CategoryBudgetCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             '₹${NumberFormat('#,##0').format(category.spentAmount)}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
           const SizedBox(height: 2),
@@ -84,7 +87,7 @@ class CategoryBudgetCard extends StatelessWidget {
             'of ₹${NumberFormat('#,##0').format(category.budgetAmount)}',
             style: TextStyle(
               fontSize: 11,
-              color: Colors.grey[600],
+              color: isDark ? Colors.white60 : Colors.grey[600],
             ),
           ),
           const SizedBox(height: 8),
@@ -92,7 +95,7 @@ class CategoryBudgetCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: category.percentage / 100,
-              backgroundColor: Colors.grey[200],
+              backgroundColor: isDark ? Colors.white12 : Colors.grey[200],
               valueColor: AlwaysStoppedAnimation<Color>(Color(category.color)),
               minHeight: 6,
             ),

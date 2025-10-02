@@ -18,12 +18,6 @@ class ImportExportService {
 
   // Export transactions to JSON
   Future<void> exportToJson() async {
-    if (!kIsWeb) {
-      // On mobile, we can't export files directly
-      // This would require file_picker package or share package
-      return;
-    }
-
     final transactions = _dataService.transactions;
     final exportData = transactions.map((transaction) => {
       'id': transaction.id,
@@ -37,7 +31,12 @@ class ImportExportService {
 
     final jsonString = const JsonEncoder.withIndent('  ').convert(exportData);
     final fileName = 'finance_backup_${DateFormat('yyyy_MM_dd').format(DateTime.now())}.json';
-    ImportExportHelper.downloadJsonFile(jsonString, fileName);
+    
+    try {
+      await ImportExportHelper.downloadJsonFile(jsonString, fileName);
+    } catch (e) {
+      throw Exception('Export failed: $e');
+    }
   }
 
   // Import transactions from JSON
@@ -122,19 +121,6 @@ class ImportExportService {
 
   // Trigger file picker for import
   Future<void> pickAndImportFile(BuildContext context) async {
-    if (!kIsWeb) {
-      // On mobile, show message that import is only available on web
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Import/Export is currently only available on web version'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-      return;
-    }
-
     try {
       final jsonString = await ImportExportHelper.pickJsonFile();
       if (jsonString == null) return;

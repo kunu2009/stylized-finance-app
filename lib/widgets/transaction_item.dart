@@ -9,6 +9,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isIncome = transaction.type == TransactionType.income;
     final isLent = transaction.type == TransactionType.lent;
     final isBorrowed = transaction.type == TransactionType.borrowed;
@@ -50,11 +51,11 @@ class TransactionItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -82,9 +83,10 @@ class TransactionItem extends StatelessWidget {
               children: [
                 Text(
                   transaction.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -94,7 +96,7 @@ class TransactionItem extends StatelessWidget {
                       transaction.category,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: isDark ? Colors.white60 : Colors.grey[600],
                       ),
                     ),
                     if (transaction.contactName != null) ...[
@@ -102,7 +104,7 @@ class TransactionItem extends StatelessWidget {
                         ' • ${transaction.contactName}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: isDark ? Colors.white60 : Colors.grey[600],
                         ),
                       ),
                     ],
@@ -127,7 +129,7 @@ class TransactionItem extends StatelessWidget {
                 DateFormat('MMM dd, yyyy').format(transaction.date),
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[600],
+                  color: isDark ? Colors.white60 : Colors.grey[600],
                 ),
               ),
             ],
