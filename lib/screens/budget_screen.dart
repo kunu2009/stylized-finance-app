@@ -54,8 +54,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -66,27 +68,31 @@ class _BudgetScreenState extends State<BudgetScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Budget Management',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-                    child: const Icon(Icons.notifications_outlined),
+                    child: Icon(
+                      Icons.notifications_outlined,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ],
               ),
@@ -99,11 +105,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -127,16 +133,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             children: [
                               Text(
                                 '₹ ${NumberFormat('#,##0').format(_summary.totalExpense > 0 ? _summary.totalExpense : 0)}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.black,
                                 ),
                               ),
-                              const Text(
+                              Text(
                                 'Total Budget',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color: isDark ? Colors.white60 : Colors.grey,
                                 ),
                               ),
                             ],
@@ -172,25 +179,36 @@ class _BudgetScreenState extends State<BudgetScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Categories',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4C1D95),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'Add More',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: Navigate to add category screen
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Add categories feature coming soon!'),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4C1D95),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'Add More',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -205,11 +223,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(40),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -220,14 +238,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           Icon(
                             Icons.category_outlined,
                             size: 48,
-                            color: Colors.grey[400],
+                            color: isDark ? Colors.white38 : Colors.grey[400],
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No budget categories',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.grey[600],
+                              color: isDark ? Colors.white60 : Colors.grey[600],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -236,7 +254,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             'Add transactions to see budget breakdown',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[500],
+                              color: isDark ? Colors.white38 : Colors.grey[500],
                             ),
                           ),
                         ],
@@ -299,6 +317,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   Widget _buildLegendItem(String label, Color color) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -313,9 +333,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
-            color: Colors.grey,
+            color: isDark ? Colors.white70 : Colors.grey,
           ),
         ),
       ],

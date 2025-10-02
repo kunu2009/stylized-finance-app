@@ -69,7 +69,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           const Text(
-            'Albert Flores',
+            '7K',
             style: TextStyle(
               color: Colors.white70,
               fontSize: 14,
