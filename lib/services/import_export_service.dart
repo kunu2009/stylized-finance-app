@@ -1,9 +1,13 @@
 import 'dart:convert';
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 import '../models/finance_models.dart';
 import '../services/finance_data_service.dart';
+
+// Conditional import for web/mobile
+import 'import_export_service_mobile.dart'
+    if (dart.library.html) 'import_export_service_web.dart';
 
 class ImportExportService {
   static final ImportExportService _instance = ImportExportService._internal();
@@ -14,6 +18,12 @@ class ImportExportService {
 
   // Export transactions to JSON
   Future<void> exportToJson() async {
+    if (!kIsWeb) {
+      // On mobile, we can't export files directly
+      // This would require file_picker package or share package
+      return;
+    }
+
     final transactions = _dataService.transactions;
     final exportData = transactions.map((transaction) => {
       'id': transaction.id,
@@ -26,17 +36,8 @@ class ImportExportService {
     }).toList();
 
     final jsonString = const JsonEncoder.withIndent('  ').convert(exportData);
-    final bytes = utf8.encode(jsonString);
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'finance_backup_${DateFormat('yyyy_MM_dd').format(DateTime.now())}.json';
-    html.document.body!.children.add(anchor);
-    anchor.click();
-    html.document.body!.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
+    final fileName = 'finance_backup_${DateFormat('yyyy_MM_dd').format(DateTime.now())}.json';
+    ImportExportHelper.downloadJsonFile(jsonString, fileName);
   }
 
   // Import transactions from JSON
@@ -121,47 +122,49 @@ class ImportExportService {
 
   // Trigger file picker for import
   Future<void> pickAndImportFile(BuildContext context) async {
-    final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = '.json';
-    uploadInput.click();
+    if (!kIsWeb) {
+      // On mobile, show message that import is only available on web
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Import/Export is currently only available on web version'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+      return;
+    }
 
-    uploadInput.onChange.listen((e) async {
-      final files = uploadInput.files;
-      if (files!.isEmpty) return;
+    try {
+      final jsonString = await ImportExportHelper.pickJsonFile();
+      if (jsonString == null) return;
 
-      final reader = html.FileReader();
-      reader.readAsText(files[0]);
-      reader.onLoad.listen((e) async {
-        try {
-          final jsonString = reader.result as String;
-          final transactions = await importFromJson(jsonString);
-          
-          // Add transactions to data service
-          for (final transaction in transactions) {
-            _dataService.addTransaction(transaction);
-          }
+      final transactions = await importFromJson(jsonString);
+      
+      // Add transactions to data service
+      for (final transaction in transactions) {
+        _dataService.addTransaction(transaction);
+      }
 
-          // Show success message
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Successfully imported ${transactions.length} transactions'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          }
-        } catch (e) {
-          // Show error message
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Import failed: $e'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }
-      });
-    });
+      // Show success message
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Successfully imported ${transactions.length} transactions'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Import failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
