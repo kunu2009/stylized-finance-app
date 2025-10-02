@@ -1,0 +1,218 @@
+import '../models/finance_models.dart';
+import '../services/finance_data_service.dart';
+
+class DataPreloader {
+  static final FinanceDataService _dataService = FinanceDataService();
+
+  static Future<void> loadSampleData() async {
+    // Your backup data from the JSON file
+    final sampleTransactions = [
+      // Income transactions
+      Transaction(
+        id: '1758655410194',
+        title: 'Auva',
+        amount: 500,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Auva',
+      ),
+      Transaction(
+        id: '1758655410218',
+        title: 'Leftover from trip',
+        amount: 20,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Leftover from trip',
+      ),
+      Transaction(
+        id: '1758655410221',
+        title: 'College bag cash',
+        amount: 250,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'College bag cash',
+      ),
+      Transaction(
+        id: '1758655410222',
+        title: 'Coin bag cash',
+        amount: 20,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Coin bag cash',
+      ),
+      Transaction(
+        id: '1758655410224',
+        title: 'Wallet cash',
+        amount: 1170,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Wallet cash',
+      ),
+      Transaction(
+        id: '1758655410225',
+        title: 'Wallet cash',
+        amount: 200,
+        category: 'General Income',
+        date: DateTime(2025, 9, 3),
+        type: TransactionType.income,
+        description: 'Wallet cash',
+      ),
+      Transaction(
+        id: '1758655410227',
+        title: 'Cash',
+        amount: 40,
+        category: 'General Income',
+        date: DateTime(2025, 9, 5),
+        type: TransactionType.income,
+        description: 'Cash',
+      ),
+      Transaction(
+        id: '1758655410228',
+        title: 'Cash',
+        amount: 40,
+        category: 'General Income',
+        date: DateTime(2025, 9, 13),
+        type: TransactionType.income,
+        description: 'Cash',
+      ),
+      Transaction(
+        id: '1758655410230',
+        title: 'Online income',
+        amount: 92,
+        category: 'Freelance',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Online income',
+      ),
+      Transaction(
+        id: '1758655410231',
+        title: 'Auva',
+        amount: 500,
+        category: 'General Income',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.income,
+        description: 'Auva',
+      ),
+      Transaction(
+        id: '1758655410258',
+        title: 'Mom\'s contribution',
+        amount: 100,
+        category: 'General Income',
+        date: DateTime(2025, 8, 31),
+        type: TransactionType.income,
+        description: 'Mom\'s contribution',
+      ),
+      
+      // Expense transactions
+      Transaction(
+        id: '1758655410233',
+        title: 'Chicken rice',
+        amount: 150,
+        category: 'Food & Dining',
+        date: DateTime(2025, 9, 3),
+        type: TransactionType.expense,
+        description: 'Chicken rice',
+      ),
+      Transaction(
+        id: '1758655410241',
+        title: 'Online train ticket',
+        amount: 40,
+        category: 'Transportation',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.expense,
+        description: 'Online train ticket',
+      ),
+      Transaction(
+        id: '1758655410244',
+        title: 'Atta online',
+        amount: 2,
+        category: 'Food & Dining',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.expense,
+        description: 'Atta online',
+      ),
+      Transaction(
+        id: '1758655410246',
+        title: 'Mom slippers',
+        amount: 500,
+        category: 'Shopping',
+        date: DateTime(2025, 9, 23),
+        type: TransactionType.expense,
+        description: 'mom slippers',
+      ),
+      Transaction(
+        id: '1758655410247',
+        title: 'Campa cola',
+        amount: 20,
+        category: 'Food & Dining',
+        date: DateTime(2025, 8, 30),
+        type: TransactionType.expense,
+        description: 'Campa cola',
+      ),
+      Transaction(
+        id: '1758655410249',
+        title: 'Chai at Juhu Beach',
+        amount: 20,
+        category: 'Food & Dining',
+        date: DateTime(2025, 8, 30),
+        type: TransactionType.expense,
+        description: 'Chai at Juhu Beach',
+      ),
+      Transaction(
+        id: '1758655410251',
+        title: 'Chai at Juhu Beach for Pratham',
+        amount: 20,
+        category: 'Food & Dining',
+        date: DateTime(2025, 8, 30),
+        type: TransactionType.expense,
+        description: 'Chai at Juhu Beach for Pratham',
+      ),
+      Transaction(
+        id: '1758655410253',
+        title: 'Orange juice',
+        amount: 5,
+        category: 'Food & Dining',
+        date: DateTime(2025, 8, 30),
+        type: TransactionType.expense,
+        description: 'Orange juice',
+      ),
+      Transaction(
+        id: '1758655410255',
+        title: 'Train ticket Charni Road to Dadar',
+        amount: 5,
+        category: 'Transportation',
+        date: DateTime(2025, 8, 31),
+        type: TransactionType.expense,
+        description: 'Train ticket Charni Road to Dadar',
+      ),
+      Transaction(
+        id: '1758655410256',
+        title: 'Train ticket Dadar to Churchgate',
+        amount: 10,
+        category: 'Transportation',
+        date: DateTime(2025, 8, 31),
+        type: TransactionType.expense,
+        description: 'Train ticket Dadar to Churchgate',
+      ),
+      Transaction(
+        id: '1758655410261',
+        title: 'Donation and vadapav',
+        amount: 40,
+        category: 'Food & Dining',
+        date: DateTime(2025, 9, 4),
+        type: TransactionType.expense,
+        description: 'Donation and vadapav',
+      ),
+    ];
+
+    // Add all transactions to the data service
+    for (final transaction in sampleTransactions) {
+      _dataService.addTransaction(transaction);
+    }
+  }
+}
