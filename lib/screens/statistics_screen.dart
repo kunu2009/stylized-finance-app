@@ -18,7 +18,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   FinancialSummary _summary = FinancialSummary();
   List<Transaction> _recentTransactions = [];
 
-  final List<double> weeklyData = [0, 0, 0, 0, 0, 0, 0];
+  List<double> weeklyData = [0, 0, 0, 0, 0, 0, 0];
   final List<String> weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   @override
@@ -36,7 +36,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     setState(() {
       _summary = _dataService.getFinancialSummary();
       _recentTransactions = _dataService.getRecentTransactions();
+      _calculateWeeklyData();
     });
+  }
+
+  void _calculateWeeklyData() {
+    weeklyData = [0, 0, 0, 0, 0, 0, 0];
+    
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    
+    for (var transaction in _dataService.transactions) {
+      final daysDiff = transaction.date.difference(startOfWeek).inDays;
+      
+      if (daysDiff >= 0 && daysDiff < 7) {
+        if (isExpenseSelected && transaction.type == TransactionType.expense) {
+          weeklyData[daysDiff] += transaction.amount;
+        } else if (!isExpenseSelected && transaction.type == TransactionType.income) {
+          weeklyData[daysDiff] += transaction.amount;
+        }
+      }
+    }
   }
 
   @override
@@ -90,7 +110,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: isDark ? const Color(0xFF1E1E1E) : Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Row(
@@ -100,6 +120,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         onTap: () {
                           setState(() {
                             isExpenseSelected = true;
+                            _calculateWeeklyData();
                           });
                         },
                         child: Container(
@@ -114,7 +135,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             'Expense',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: isExpenseSelected ? Colors.white : Colors.grey[600],
+                              color: isExpenseSelected ? Colors.white : (isDark ? Colors.white60 : Colors.grey[600]),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -126,6 +147,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         onTap: () {
                           setState(() {
                             isExpenseSelected = false;
+                            _calculateWeeklyData();
                           });
                         },
                         child: Container(
@@ -140,7 +162,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             'Income',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: !isExpenseSelected ? Colors.white : Colors.grey[600],
+                              color: !isExpenseSelected ? Colors.white : (isDark ? Colors.white60 : Colors.grey[600]),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -160,18 +182,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Total Expenses',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
+                          color: isDark ? Colors.white60 : Colors.grey,
                         ),
                       ),
                       Text(
                         '₹ ${NumberFormat('#,##0').format(isExpenseSelected ? _summary.totalExpense : _summary.totalIncome)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                     ],
@@ -182,13 +205,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         'Week',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: isDark ? Colors.white60 : Colors.grey[600],
                         ),
                       ),
                       const SizedBox(width: 4),
                       Icon(
                         Icons.keyboard_arrow_down,
-                        color: Colors.grey[600],
+                        color: isDark ? Colors.white60 : Colors.grey[600],
                       ),
                     ],
                   ),
@@ -203,11 +226,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -216,7 +239,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 child: BarChart(
                   BarChartData(
                     alignment: BarChartAlignment.spaceAround,
-                    maxY: 10000,
+                    maxY: weeklyData.isEmpty || weeklyData.every((d) => d == 0) 
+                        ? 1000 
+                        : (weeklyData.reduce((a, b) => a > b ? a : b) * 1.2),
                     barTouchData: BarTouchData(enabled: false),
                     titlesData: FlTitlesData(
                       show: true,
@@ -224,8 +249,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         sideTitles: SideTitles(
                           showTitles: true,
                           getTitlesWidget: (double value, TitleMeta meta) {
-                            const style = TextStyle(
-                              color: Colors.grey,
+                            final style = TextStyle(
+                              color: isDark ? Colors.white60 : Colors.grey,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             );

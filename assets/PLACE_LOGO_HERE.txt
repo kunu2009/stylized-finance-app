@@ -1,0 +1,11 @@
+IMPORTANT: Save your 7K logo image as "logo.png" in this folder.
+
+Steps to add your logo:
+1. Save the 7K logo image you provided as "logo.png" in this assets folder
+2. Make sure it's named exactly: logo.png
+3. The image should be square (1024x1024 recommended for best quality)
+4. After placing the logo, run: flutter pub get
+5. Then run: dart run flutter_launcher_icons
+6. Finally rebuild the APK
+
+The logo will be automatically converted to all required sizes for Android.

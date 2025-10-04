@@ -51,7 +51,6 @@ class ThemeService extends ChangeNotifier {
       brightness: Brightness.dark,
       cardColor: const Color(0xFF1E1E1E),
       canvasColor: const Color(0xFF1E1E1E),
-      dialogBackgroundColor: const Color(0xFF1E1E1E),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xFF121212),
         elevation: 0,
@@ -133,7 +132,7 @@ class ThemeService extends ChangeNotifier {
           foregroundColor: const Color(0xFF8B5CF6),
         ),
       ),
-      dividerColor: Colors.white12,
+      dividerColor: Colors.white12, dialogTheme: DialogThemeData(backgroundColor: const Color(0xFF1E1E1E)),
     );
   }
 

@@ -42,19 +42,21 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: isDark ? Colors.white : Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Edit Transaction',
           style: TextStyle(
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -69,11 +71,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Transaction Type Selection
-              const Text(
+              Text(
                 'Transaction Type',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
@@ -82,30 +85,38 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
               const SizedBox(height: 24),
               
               // Amount Input
-              const Text(
+              Text(
                 'Amount',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   hintText: 'Enter amount',
+                  hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[600]),
                   prefixText: '₹ ',
+                  prefixStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFF4C1D95)),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -121,28 +132,35 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
               const SizedBox(height: 24),
               
               // Title Input
-              const Text(
+              Text(
                 'Title',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _titleController,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   hintText: 'Enter title',
+                  hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[600]),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFF4C1D95)),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -168,11 +186,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
               const SizedBox(height: 24),
               
               // Date Selection
-              const Text(
+              Text(
                 'Date',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
@@ -182,9 +201,9 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[300]!),
+                    border: Border.all(color: isDark ? Colors.white24 : Colors.grey[300]!),
                   ),
                   child: Row(
                     children: [
@@ -192,7 +211,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                       const SizedBox(width: 12),
                       Text(
                         DateFormat('MMM dd, yyyy').format(_selectedDate),
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
                       ),
                     ],
                   ),
@@ -202,29 +224,36 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
               const SizedBox(height: 24),
               
               // Description Input
-              const Text(
+              Text(
                 'Description (Optional)',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 3,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   hintText: 'Enter description',
+                  hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[600]),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFF4C1D95)),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 ),
               ),
               
@@ -261,9 +290,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   }
 
   Widget _buildTransactionTypeSelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -331,6 +361,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   }
 
   Widget _buildCategorySelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final categories = _selectedType == TransactionType.income
         ? _dataService.getIncomeCategories()
         : _dataService.getExpenseCategories();
@@ -338,11 +369,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Category',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -360,10 +392,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF4C1D95) : Colors.white,
+                  color: isSelected ? const Color(0xFF4C1D95) : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF4C1D95) : Colors.grey[300]!,
+                    color: isSelected ? const Color(0xFF4C1D95) : (isDark ? Colors.white24 : Colors.grey[300]!),
                   ),
                 ),
                 child: Row(
@@ -377,7 +409,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                     Text(
                       category.name,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black,
+                        color: isSelected ? Colors.white : (isDark ? Colors.white : Colors.black),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -393,6 +425,8 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   }
 
   Widget _buildContactInput() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -400,26 +434,33 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
           _selectedType == TransactionType.lent || _selectedType == TransactionType.lentReturn
               ? 'Lent To'
               : 'Borrowed From',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
         TextFormField(
           controller: _contactController,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
           decoration: InputDecoration(
             hintText: 'Enter contact name',
+            hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[600]),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey[300]!),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFF4C1D95)),
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {

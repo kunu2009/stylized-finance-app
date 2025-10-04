@@ -152,22 +152,20 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        _buildLegendItem('Groceries', const Color(0xFF8B5CF6)),
-                        const SizedBox(width: 20),
-                        _buildLegendItem('Shopping', const Color(0xFFFFB800)),
-                        const SizedBox(width: 20),
-                        _buildLegendItem('Rent', const Color(0xFFFF6B9D)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _buildLegendItem('Fuel', const Color(0xFF06D6A0)),
-                        const SizedBox(width: 20),
-                        _buildLegendItem('Other', const Color(0xFFFF4757)),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _categories.isEmpty
+                          ? [
+                              _buildLegendItem('No data', Colors.grey),
+                            ]
+                          : _categories.where((c) => c.spentAmount > 0).map((category) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: _buildLegendItem(category.name, Color(category.color)),
+                              );
+                            }).toList(),
+                      ),
                     ),
                   ],
                 ),
@@ -265,8 +263,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 1.8,
-                        crossAxisSpacing: 16,
+                        childAspectRatio: 1.4,
+                        crossAxisSpacing: 12,
                         mainAxisSpacing: 16,
                       ),
                       itemCount: _categories.length,

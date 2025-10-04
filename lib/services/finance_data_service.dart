@@ -1,4 +1,6 @@
 import '../models/finance_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class FinanceDataService {
   static final FinanceDataService _instance = FinanceDataService._internal();
@@ -6,10 +8,11 @@ class FinanceDataService {
   FinanceDataService._internal();
 
   // In-memory data storage (can be replaced with database later)
-  List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [];
   List<Category> _categories = [];
-  List<SavingsGoal> _savingsGoals = [];
-  List<LendBorrowRecord> _lendBorrowRecords = [];
+  List<Category> _customCategories = [];
+  final List<SavingsGoal> _savingsGoals = [];
+  final List<LendBorrowRecord> _lendBorrowRecords = [];
   
   // Default categories
   final List<Category> _defaultCategories = [
@@ -20,6 +23,7 @@ class FinanceDataService {
       color: 0xFF8B5CF6,
       budgetAmount: 0.0,
       type: TransactionType.expense,
+      isCustom: false,
     ),
     Category(
       id: '2',
@@ -28,6 +32,7 @@ class FinanceDataService {
       color: 0xFFFFB800,
       budgetAmount: 0.0,
       type: TransactionType.expense,
+      isCustom: false,
     ),
     Category(
       id: '3',
@@ -36,6 +41,7 @@ class FinanceDataService {
       color: 0xFF06D6A0,
       budgetAmount: 0.0,
       type: TransactionType.expense,
+      isCustom: false,
     ),
     Category(
       id: '4',
@@ -44,6 +50,7 @@ class FinanceDataService {
       color: 0xFFFF6B9D,
       budgetAmount: 0.0,
       type: TransactionType.expense,
+      isCustom: false,
     ),
     Category(
       id: '5',
@@ -52,6 +59,7 @@ class FinanceDataService {
       color: 0xFFFF4757,
       budgetAmount: 0.0,
       type: TransactionType.expense,
+      isCustom: false,
     ),
     Category(
       id: '6',
@@ -60,6 +68,7 @@ class FinanceDataService {
       color: 0xFF06D6A0,
       budgetAmount: 0.0,
       type: TransactionType.income,
+      isCustom: false,
     ),
     Category(
       id: '7',
@@ -68,6 +77,7 @@ class FinanceDataService {
       color: 0xFF8B5CF6,
       budgetAmount: 0.0,
       type: TransactionType.income,
+      isCustom: false,
     ),
     Category(
       id: '8',
@@ -76,6 +86,7 @@ class FinanceDataService {
       color: 0xFFFFB800,
       budgetAmount: 0.0,
       type: TransactionType.income,
+      isCustom: false,
     ),
   ];
 
@@ -83,6 +94,7 @@ class FinanceDataService {
   Future<void> initializeData() async {
     if (_categories.isEmpty) {
       _categories = List.from(_defaultCategories);
+      await _loadCustomCategories();
     }
   }
 
@@ -128,6 +140,8 @@ class FinanceDataService {
       totalExpense: totalExpense,
       totalLent: totalLent,
       totalBorrowed: totalBorrowed,
+      totalLentReturned: lentReturns,
+      totalBorrowReturned: borrowReturns,
       pendingLentAmount: pendingLent,
       pendingBorrowedAmount: pendingBorrowed,
     );
@@ -156,11 +170,6 @@ class FinanceDataService {
   // Add category
   void addCategory(Category category) {
     _categories.add(category);
-  }
-
-  // Delete category
-  void deleteCategory(String name) {
-    _categories.removeWhere((c) => c.name == name);
   }
 
   // Add savings goal
@@ -212,5 +221,104 @@ class FinanceDataService {
     _savingsGoals.clear();
     _lendBorrowRecords.clear();
     _categories = List.from(_defaultCategories);
+  }
+
+  // ==================== Custom Categories Management ====================
+
+  // Load custom categories from SharedPreferences
+  Future<void> _loadCustomCategories() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final customCategoriesJson = prefs.getString('custom_categories');
+      
+      if (customCategoriesJson != null) {
+        final List<dynamic> decoded = json.decode(customCategoriesJson);
+        _customCategories = decoded.map((item) {
+          return Category(
+            id: item['id'],
+            name: item['name'],
+            icon: item['icon'],
+            color: item['color'],
+            budgetAmount: item['budgetAmount'] ?? 0.0,
+            type: item['type'] == 'income' ? TransactionType.income : TransactionType.expense,
+            isCustom: true,
+          );
+        }).toList();
+        
+        // Add custom categories to main categories list
+        _categories.addAll(_customCategories);
+      }
+    } catch (e) {
+      print('Error loading custom categories: $e');
+    }
+  }
+
+  // Save custom categories to SharedPreferences
+  Future<void> _saveCustomCategories() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final customCategoriesJson = json.encode(
+        _customCategories.map((category) {
+          return {
+            'id': category.id,
+            'name': category.name,
+            'icon': category.icon,
+            'color': category.color,
+            'budgetAmount': category.budgetAmount,
+            'type': category.type == TransactionType.income ? 'income' : 'expense',
+          };
+        }).toList(),
+      );
+      await prefs.setString('custom_categories', customCategoriesJson);
+    } catch (e) {
+      print('Error saving custom categories: $e');
+    }
+  }
+
+  // Add custom category
+  Future<void> addCustomCategory(Category category) async {
+    _customCategories.add(category);
+    _categories.add(category);
+    await _saveCustomCategories();
+  }
+
+  // Update custom category
+  Future<void> updateCustomCategory(Category updatedCategory) async {
+    // Remove old version from both lists
+    _customCategories.removeWhere((c) => c.id == updatedCategory.id);
+    _categories.removeWhere((c) => c.id == updatedCategory.id);
+    
+    // Add updated version
+    _customCategories.add(updatedCategory);
+    _categories.add(updatedCategory);
+    
+    await _saveCustomCategories();
+  }
+
+  // Delete category (updated to handle both default check and type)
+  void deleteCategory(String name, TransactionType type) {
+    // Don't allow deleting default categories
+    if (isDefaultCategory(name, type)) {
+      return;
+    }
+    
+    _customCategories.removeWhere((c) => c.name == name);
+    _categories.removeWhere((c) => c.name == name);
+    _saveCustomCategories();
+  }
+
+  // Check if category is a default category
+  bool isDefaultCategory(String name, TransactionType type) {
+    return _defaultCategories.any((c) => c.name == name && c.type == type);
+  }
+
+  // Get all custom categories
+  List<Category> getCustomCategories() {
+    return List.unmodifiable(_customCategories);
+  }
+
+  // Get custom categories by type
+  List<Category> getCustomCategoriesByType(TransactionType type) {
+    return _customCategories.where((c) => c.type == type).toList();
   }
 }

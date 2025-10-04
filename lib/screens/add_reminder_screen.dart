@@ -23,17 +23,19 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Add Reminder',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
       ),
@@ -98,14 +100,17 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   }
 
   Widget _buildTypeSelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Reminder Type',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -123,7 +128,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
+                  color: isSelected ? const Color(0xFF8B5CF6).withOpacity(0.1) : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected ? const Color(0xFF8B5CF6) : Colors.grey[300]!,
@@ -135,6 +140,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -161,14 +167,17 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   }
 
   Widget _buildDateSelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Due Date',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -177,7 +186,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey[300]!),
             ),
@@ -187,7 +196,10 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                 const SizedBox(width: 12),
                 Text(
                   DateFormat('MMM dd, yyyy').format(_dueDate),
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -205,14 +217,17 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
     int maxLines = 1,
     bool required = true,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -223,7 +238,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
           decoration: InputDecoration(
             hintText: hint,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey[300]!),

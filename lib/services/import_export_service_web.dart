@@ -3,7 +3,7 @@ import 'dart:html' as html;
 import 'dart:async';
 
 class ImportExportHelper {
-  static void downloadJsonFile(String jsonString, String fileName) {
+  static Future<void> downloadJsonFile(String jsonString, String fileName) async {
     final bytes = utf8.encode(jsonString);
     final blob = html.Blob([bytes]);
     final url = html.Url.createObjectUrlFromBlob(blob);

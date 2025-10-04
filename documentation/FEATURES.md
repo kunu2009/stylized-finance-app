@@ -47,32 +47,146 @@
 ---
 
 ### 3. Dark Mode
-**Status:** ✅ Fully Implemented
+**Status:** ✅ Fully Implemented (100% Complete)
 
 **What it does:**
 - Toggle between light and dark theme
 - Persistent theme preference
 - Smooth theme transitions
+- **ALL 11 screens fully themed**
+
+**Complete Coverage:**
+- ✅ Dashboard Screen
+- ✅ Budget Screen  
+- ✅ Statistics Screen
+- ✅ Settings Screen
+- ✅ Add Transaction Screen
+- ✅ Edit Transaction Screen
+- ✅ All Transactions Screen
+- ✅ Search Screen
+- ✅ Recurring Transactions Screen
+- ✅ Add Recurring Screen
+- ✅ Reminders Screen
+- ✅ Add Reminder Screen
 
 **Files:**
 - `lib/services/theme_service.dart` - Theme management
-- Updated `main.dart` - Theme integration
+- Updated all screens with dark mode support
 
 **How to use:**
 1. Go to Settings → Appearance
 2. Toggle Dark Mode switch
+3. All screens instantly switch to dark theme
+
+---
+
+### 4. Custom Categories
+**Status:** ✅ Fully Implemented
+
+**What it does:**
+- Create unlimited custom income/expense categories
+- Choose from 40+ emoji icons
+- Select from 16 beautiful colors
+- Set optional budgets per category
+- Edit and delete custom categories
+- Persistent storage with SharedPreferences
+
+**Features:**
+- ✅ Tab-based interface (Income/Expense)
+- ✅ 40+ emoji icon picker
+- ✅ 16 color palette
+- ✅ Optional budget setting
+- ✅ Swipe-to-delete for custom categories
+- ✅ Long-press delete option
+- ✅ Default categories protected
+- ✅ Live preview while creating
+- ✅ Full dark mode support
+
+**Files:**
+- `lib/screens/manage_categories_screen.dart` - Main management screen
+- `lib/screens/add_category_screen.dart` - Create/edit screen
+- Updated `lib/models/finance_models.dart` - Added isCustom field
+- Updated `lib/services/finance_data_service.dart` - CRUD operations
+
+**How to use:**
+1. Go to Settings → Manage Categories
+2. Choose Income or Expense tab
+3. Tap + FAB to add new category
+4. Select icon, color, set budget (optional)
+5. Swipe left or long-press to delete (custom only)
+
+---
+
+### 5. Search & Advanced Filters
+**Status:** ✅ Fully Implemented
+
+**What it does:**
+- Real-time transaction search
+- Filter by transaction type
+- Filter by date range
+- Multiple active filters
+
+**Files:**
+- `lib/screens/search_screen.dart` - Search interface
+- Full dark mode support
+
+**How to use:**
+1. Tap search icon (🔍) on dashboard
+2. Type to search by title/description/category
+3. Use filters to narrow results
+
+---
+
+### 6. Edit/Delete Transactions
+**Status:** ✅ Fully Implemented
+
+**What it does:**
+- Edit any existing transaction
+- Delete unwanted transactions
+- Long-press menu interface
+
+**Files:**
+- `lib/screens/edit_transaction_screen.dart` - Edit interface
+- `lib/screens/all_transactions_screen.dart` - View all with actions
+
+**How to use:**
+1. Dashboard → "View all"
+2. Long-press any transaction
+3. Choose Edit or Delete
+
+---
+
+### 7. Import/Export Data
+**Status:** ✅ Fully Implemented
+
+**What it does:**
+- Export all data to JSON
+- Import backup files
+- Works on both Android and Web
+
+**Files:**
+- `lib/services/import_export_service.dart`
+- `lib/services/import_export_service_mobile.dart`
+- `lib/services/import_export_service_web.dart`
+
+**How to use:**
+1. Settings → Data Management
+2. Export: Creates backup JSON file
+3. Import: Select JSON file to restore
 
 ---
 
 ## Features Remaining to Implement 🚧
 
-### 4. Data Persistence (Critical - Next Priority)
-**Status:** ❌ Not Implemented
+### 8. Data Persistence (Critical - Next Priority)
+**Status:** ⚠️ Partially Implemented (Custom categories persist)
 
 **What's needed:**
-- Save data to device storage (SharedPreferences or SQLite)
-- Currently all data is in-memory and lost on app restart
-- Need to persist: transactions, categories, goals, recurring, reminders
+- ✅ Custom categories persist using SharedPreferences
+- ❌ Transactions need SQLite database
+- ❌ Recurring transactions need persistence
+- ❌ Reminders need persistence
+- ❌ Budget data needs persistence
 
 **Implementation Steps:**
 1. Add `sqflite` package to pubspec.yaml
@@ -82,7 +196,7 @@
 
 ---
 
-### 5. Advanced Analytics & Reports
+### 9. Advanced Analytics & Reports
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -94,7 +208,7 @@
 
 ---
 
-### 6. Multi-Currency Support
+### 10. Multi-Currency Support
 **Status:** ❌ Not Implemented (Currently ₹ only)
 
 **What's needed:**
@@ -105,7 +219,7 @@
 
 ---
 
-### 7. Bank Integration & Auto-Import
+### 11. Bank Integration & Auto-Import
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -116,7 +230,7 @@
 
 ---
 
-### 8. Cloud Sync & Multi-Device
+### 12. Cloud Sync & Multi-Device
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -127,7 +241,7 @@
 
 ---
 
-### 9. Investment Tracking
+### 13. Investment Tracking
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -138,7 +252,7 @@
 
 ---
 
-### 10. Bill Splitting & Group Expenses
+### 14. Bill Splitting & Group Expenses
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -149,7 +263,7 @@
 
 ---
 
-### 11. Widgets & Quick Actions
+### 15. Widgets & Quick Actions
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -159,7 +273,7 @@
 
 ---
 
-### 12. Receipt & Photo Attachments
+### 16. Receipt & Photo Attachments
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -170,7 +284,7 @@
 
 ---
 
-### 13. Budget Alerts & Notifications
+### 17. Budget Alerts & Notifications
 **Status:** ⚠️ Partially Implemented
 
 **Current:**
@@ -184,18 +298,7 @@
 
 ---
 
-### 14. Search & Advanced Filters
-**Status:** ❌ Not Implemented
-
-**What's needed:**
-- Search by title, amount, category
-- Date range filtering
-- Advanced filter combinations
-- Saved filter presets
-
----
-
-### 15. Onboarding & Tutorial
+### 18. Onboarding & Tutorial
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -206,7 +309,7 @@
 
 ---
 
-### 16. Accessibility Improvements
+### 19. Accessibility Improvements
 **Status:** ❌ Not Implemented
 
 **What's needed:**
@@ -219,26 +322,28 @@
 
 ## Priority Roadmap
 
-### Phase 1 (Critical)
+### Phase 1 (Critical) ✅ COMPLETE
 1. ✅ Recurring transactions
 2. ✅ Reminders
-3. ✅ Dark mode
-4. ❌ Data persistence (SQLite)
-5. ❌ Push notifications
+3. ✅ Dark mode (100% complete)
+4. ✅ Custom categories
+5. ✅ Search & filters
+6. ✅ Edit/Delete transactions
 
-### Phase 2 (Important)
-6. ❌ Advanced analytics
-7. ❌ Search & filters
-8. ❌ Budget alerts
-9. ❌ Receipt attachments
-10. ❌ Onboarding
+### Phase 2 (Important) - NEXT
+7. ❌ Full data persistence (SQLite)
+8. ❌ Push notifications
+9. ❌ Advanced analytics
+10. ❌ Budget alerts
+11. ❌ Receipt attachments
+12. ❌ Onboarding
 
 ### Phase 3 (Nice to Have)
-11. ❌ Multi-currency
-12. ❌ Cloud sync
-13. ❌ Investment tracking
-14. ❌ Bill splitting
-15. ❌ Bank integration
+13. ❌ Multi-currency
+14. ❌ Cloud sync
+15. ❌ Investment tracking
+16. ❌ Bill splitting
+17. ❌ Bank integration
 
 ---
 
@@ -249,7 +354,12 @@
 3. **Performance:** Large transaction lists need pagination
 4. **Code Quality:** Need refactoring in some services
 5. **Documentation:** API docs needed
+6. **Data Persistence:** Need SQLite for all data (not just categories)
 
 ---
 
-_Last updated: October 2, 2025_
+_Last updated: October 3, 2025_
+
+**Current Build:** v1.0.0+3 (22.1MB APK)  
+**GitHub:** https://github.com/kunu2009/stylized-finance-app
+

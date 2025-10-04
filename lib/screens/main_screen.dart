@@ -4,7 +4,6 @@ import 'budget_screen.dart';
 import 'statistics_screen.dart';
 import 'settings_screen.dart';
 import 'add_transaction_screen.dart';
-import 'search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

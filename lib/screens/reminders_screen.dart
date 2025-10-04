@@ -23,21 +23,22 @@ class _RemindersScreenState extends State<RemindersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final overdue = _reminderService.getOverdueReminders();
     final today = _reminderService.getTodayReminders();
     final upcoming = _reminderService.getUpcomingReminders();
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Reminders',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
       ),
@@ -124,7 +125,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
   }
 
   Widget _buildReminderCard(Reminder reminder, Color accentColor) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Card(
+      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: Container(
@@ -141,9 +145,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
         ),
         title: Text(
           reminder.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         subtitle: Column(
@@ -153,19 +158,19 @@ class _RemindersScreenState extends State<RemindersScreen> {
               reminder.description,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: isDark ? Colors.white60 : Colors.grey[600],
               ),
             ),
             const SizedBox(height: 4),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 12, color: Colors.grey[500]),
+                Icon(Icons.calendar_today, size: 12, color: isDark ? Colors.white38 : Colors.grey[500]),
                 const SizedBox(width: 4),
                 Text(
                   DateFormat('MMM dd, yyyy').format(reminder.dueDate),
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: isDark ? Colors.white38 : Colors.grey[500],
                   ),
                 ),
               ],

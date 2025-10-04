@@ -16,19 +16,20 @@ class _RecurringScreenState extends State<RecurringScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final recurringList = _recurringService.getActiveTransactions();
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Recurring Transactions',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         actions: [
@@ -104,10 +105,12 @@ class _RecurringScreenState extends State<RecurringScreen> {
   }
 
   Widget _buildRecurringCard(RecurringTransaction recurring) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final nextDue = recurring.getNextDueDate();
     final isDue = recurring.isDueToday();
 
     return Card(
+      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: Container(
@@ -124,9 +127,10 @@ class _RecurringScreenState extends State<RecurringScreen> {
         ),
         title: Text(
           recurring.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         subtitle: Column(
@@ -136,7 +140,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
               _getFrequencyText(recurring.frequency),
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: isDark ? Colors.white60 : Colors.grey[600],
               ),
             ),
             if (nextDue != null)
@@ -144,7 +148,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
                 'Next: ${DateFormat('MMM dd, yyyy').format(nextDue)}',
                 style: TextStyle(
                   fontSize: 12,
-                  color: isDue ? Colors.orange : Colors.grey[500],
+                  color: isDue ? Colors.orange : (isDark ? Colors.white38 : Colors.grey[500]),
                   fontWeight: isDue ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),

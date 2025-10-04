@@ -5,6 +5,7 @@ import '../services/theme_service.dart';
 import '../utils/data_preloader.dart';
 import 'recurring_screen.dart';
 import 'reminders_screen.dart';
+import 'manage_categories_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,19 +21,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: isDark ? Colors.white : Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Settings',
           style: TextStyle(
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -45,11 +48,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Features Section
-            const Text(
+            Text(
               'Features',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 16),
@@ -84,27 +88,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             
+            const SizedBox(height: 12),
+            
+            // Manage Categories
+            _buildSettingCard(
+              icon: Icons.category,
+              title: 'Manage Categories',
+              subtitle: 'Create and customize your categories',
+              color: const Color(0xFF4C1D95),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
+                );
+              },
+            ),
+            
             const SizedBox(height: 30),
             
             // Appearance Section
-            const Text(
+            Text(
               'Appearance',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 16),
             
             // Dark Mode Toggle
             Card(
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               child: SwitchListTile(
                 secondary: const Icon(Icons.dark_mode, color: Color(0xFF8B5CF6)),
-                title: const Text(
+                title: Text(
                   'Dark Mode',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
-                subtitle: const Text('Toggle dark/light theme'),
+                subtitle: Text(
+                  'Toggle dark/light theme',
+                  style: TextStyle(color: isDark ? Colors.white60 : Colors.grey[600]),
+                ),
                 value: _themeService.isDarkMode,
                 onChanged: (value) {
                   setState(() {
@@ -117,11 +145,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 30),
             
             // Data Management Section
-            const Text(
+            Text(
               'Data Management',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 16),
@@ -232,23 +261,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                color: isDark ? const Color(0xFF1E3A5F) : Colors.blue[50],
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.blue[200]!),
+                border: Border.all(
+                  color: isDark ? const Color(0xFF2563EB) : Colors.blue[200]!,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.info, color: Colors.blue[600]),
+                      Icon(
+                        Icons.info,
+                        color: isDark ? const Color(0xFF60A5FA) : Colors.blue[600],
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         'Import Instructions',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
+                          color: isDark ? const Color(0xFF93C5FD) : Colors.blue[800],
                         ),
                       ),
                     ],
@@ -256,17 +290,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 12),
                   Text(
                     'Your JSON file should contain an array of transactions with the following format:',
-                    style: TextStyle(color: Colors.blue[700]),
+                    style: TextStyle(
+                      color: isDark ? const Color(0xFF93C5FD) : Colors.blue[700],
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? const Color(0xFF0F172A) : Colors.white,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.blue[200]!),
+                      border: Border.all(
+                        color: isDark ? const Color(0xFF2563EB) : Colors.blue[200]!,
+                      ),
                     ),
-                    child: const Text(
+                    child: Text(
                       '''[
   {
     "date": "2025-09-23",
@@ -279,6 +317,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: TextStyle(
                         fontFamily: 'monospace',
                         fontSize: 12,
+                        color: isDark ? const Color(0xFF93C5FD) : Colors.black87,
                       ),
                     ),
                   ),
@@ -298,16 +337,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required Color color,
     required VoidCallback onTap,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -335,9 +376,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -345,7 +387,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     subtitle,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[600],
+                      color: isDark ? Colors.white60 : Colors.grey[600],
                     ),
                   ),
                 ],

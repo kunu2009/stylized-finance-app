@@ -37,6 +37,7 @@ class Category {
   final double budgetAmount;
   final double spentAmount;
   final TransactionType type;
+  final bool isCustom;
 
   Category({
     required this.id,
@@ -46,10 +47,12 @@ class Category {
     required this.budgetAmount,
     this.spentAmount = 0.0,
     this.type = TransactionType.expense,
+    this.isCustom = false,
   });
 
   double get percentage => budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
   double get remainingAmount => budgetAmount - spentAmount;
+  double? get budget => budgetAmount > 0 ? budgetAmount : null;
 }
 
 class SavingsGoal {
@@ -103,6 +106,8 @@ class FinancialSummary {
   final double totalExpense;
   final double totalLent;
   final double totalBorrowed;
+  final double totalLentReturned;
+  final double totalBorrowReturned;
   final double pendingLentAmount;
   final double pendingBorrowedAmount;
 
@@ -112,6 +117,8 @@ class FinancialSummary {
     this.totalExpense = 0.0,
     this.totalLent = 0.0,
     this.totalBorrowed = 0.0,
+    this.totalLentReturned = 0.0,
+    this.totalBorrowReturned = 0.0,
     this.pendingLentAmount = 0.0,
     this.pendingBorrowedAmount = 0.0,
   });

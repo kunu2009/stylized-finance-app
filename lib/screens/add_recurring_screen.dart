@@ -35,17 +35,19 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? const Color(0xFF121212) : Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Add Recurring Transaction',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
       ),
@@ -115,14 +117,17 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
   }
 
   Widget _buildTypeSelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Transaction Type',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -152,6 +157,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
   }
 
   Widget _buildTypeButton(String label, TransactionType type, IconData icon, Color color) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = _selectedType == type;
     return GestureDetector(
       onTap: () {
@@ -163,7 +169,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.white,
+          color: isSelected ? color.withOpacity(0.1) : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : Colors.grey[300]!,
@@ -189,6 +195,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
   }
 
   Widget _buildCategorySelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final categories = _selectedType == TransactionType.income
         ? _dataService.getIncomeCategories()
         : _dataService.getExpenseCategories();
@@ -196,11 +203,12 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Category',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -218,7 +226,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? Color(category.color).withOpacity(0.1) : Colors.white,
+                  color: isSelected ? Color(category.color).withOpacity(0.1) : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected ? Color(category.color) : Colors.grey[300]!,
@@ -235,6 +243,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                   ],
@@ -248,14 +257,17 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
   }
 
   Widget _buildFrequencySelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Frequency',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -273,7 +285,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
+                  color: isSelected ? const Color(0xFF8B5CF6).withOpacity(0.1) : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected ? const Color(0xFF8B5CF6) : Colors.grey[300]!,
@@ -285,6 +297,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -309,14 +322,17 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
   }
 
   Widget _buildDateSelector() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Start Date',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -325,7 +341,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey[300]!),
             ),
@@ -335,7 +351,10 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
                 const SizedBox(width: 12),
                 Text(
                   DateFormat('MMM dd, yyyy').format(_startDate),
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -352,14 +371,17 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
     TextInputType? keyboardType,
     int maxLines = 1,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -370,7 +392,7 @@ class _AddRecurringScreenState extends State<AddRecurringScreen> {
           decoration: InputDecoration(
             hintText: hint,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey[300]!),

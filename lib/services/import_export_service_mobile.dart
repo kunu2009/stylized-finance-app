@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,7 +22,7 @@ class ImportExportHelper {
       // Share the file using share_plus
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: 'Finance Tracker Backup',
+        subject: '7K Money Backup',
         text: 'Your finance data backup',
       );
     } catch (e) {
@@ -34,7 +33,7 @@ class ImportExportHelper {
       
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: 'Finance Tracker Backup',
+        subject: '7K Money Backup',
       );
     }
   }

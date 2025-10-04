@@ -1,5 +1,4 @@
 import '../models/reminder.dart';
-import '../models/finance_models.dart';
 import 'finance_data_service.dart';
 
 class ReminderService {

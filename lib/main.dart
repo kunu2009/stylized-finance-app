@@ -44,7 +44,7 @@ class _FinanceTrackerAppState extends State<FinanceTrackerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Finance Tracker',
+      title: '7K Money',
       debugShowCheckedModeBanner: false,
       theme: _themeService.getLightTheme(),
       darkTheme: _themeService.getDarkTheme(),

@@ -10,6 +10,7 @@ class CategoryBudgetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final remaining = category.budgetAmount - category.spentAmount;
     
     return Container(
       padding: const EdgeInsets.all(12),
@@ -73,22 +74,26 @@ class CategoryBudgetCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
-            '₹${NumberFormat('#,##0').format(category.spentAmount)}',
+            '₹${NumberFormat('#,##0').format(category.spentAmount)} / ₹${NumberFormat('#,##0').format(category.budgetAmount)}',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 11,
               fontWeight: FontWeight.bold,
               color: isDark ? Colors.white : Colors.black87,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
-            'of ₹${NumberFormat('#,##0').format(category.budgetAmount)}',
+            '₹${NumberFormat('#,##0').format(remaining >= 0 ? remaining : 0)} left',
             style: TextStyle(
-              fontSize: 11,
-              color: isDark ? Colors.white60 : Colors.grey[600],
+              fontSize: 10,
+              color: remaining < 0 ? Colors.red : (isDark ? Colors.white60 : Colors.grey[600]),
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8),
           ClipRRect(
