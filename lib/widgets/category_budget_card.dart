@@ -11,17 +11,31 @@ class CategoryBudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final remaining = category.budgetAmount - category.spentAmount;
+    final isOverBudget = remaining < 0;
+    final isNearLimit = !isOverBudget && category.percentage > 80;
     
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isOverBudget
+              ? const Color(0xFFEF4444).withOpacity(0.3)
+              : isNearLimit
+                  ? const Color(0xFFFBBF24).withOpacity(0.3)
+                  : Colors.transparent,
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: isOverBudget
+                ? const Color(0xFFEF4444).withOpacity(0.1)
+                : isNearLimit
+                    ? const Color(0xFFFBBF24).withOpacity(0.1)
+                    : (isDark ? Colors.black26 : Colors.grey.withOpacity(0.08)),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -33,76 +47,159 @@ class CategoryBudgetCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
-                  color: Color(category.color).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(category.color).withOpacity(0.2),
+                      Color(category.color).withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     category.icon,
-                    style: const TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 20),
                   ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Color(category.color).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${category.percentage.toInt()}%',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(category.color),
+                  color: isOverBudget
+                      ? const Color(0xFFEF4444).withOpacity(0.1)
+                      : isNearLimit
+                          ? const Color(0xFFFBBF24).withOpacity(0.1)
+                          : Color(category.color).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isOverBudget
+                        ? const Color(0xFFEF4444).withOpacity(0.3)
+                        : isNearLimit
+                            ? const Color(0xFFFBBF24).withOpacity(0.3)
+                            : Color(category.color).withOpacity(0.3),
                   ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isOverBudget || isNearLimit)
+                      Icon(
+                        isOverBudget ? Icons.warning_rounded : Icons.info_rounded,
+                        size: 14,
+                        color: isOverBudget ? const Color(0xFFEF4444) : const Color(0xFFFBBF24),
+                      ),
+                    if (isOverBudget || isNearLimit) const SizedBox(width: 4),
+                    Text(
+                      '${category.percentage.toInt()}%',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: isOverBudget
+                            ? const Color(0xFFEF4444)
+                            : isNearLimit
+                                ? const Color(0xFFFBBF24)
+                                : Color(category.color),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
           Text(
             category.name,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
               color: isDark ? Colors.white : Colors.black,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
-          Text(
-            '₹${NumberFormat('#,##0').format(category.spentAmount)} / ₹${NumberFormat('#,##0').format(category.budgetAmount)}',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Text(
+                '₹${NumberFormat.compact().format(category.spentAmount)}',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+              Text(
+                ' / ₹${NumberFormat.compact().format(category.budgetAmount)}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? Colors.white60 : Colors.grey[600],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            '₹${NumberFormat('#,##0').format(remaining >= 0 ? remaining : 0)} left',
-            style: TextStyle(
-              fontSize: 10,
-              color: remaining < 0 ? Colors.red : (isDark ? Colors.white60 : Colors.grey[600]),
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(
+                isOverBudget
+                    ? Icons.arrow_upward_rounded
+                    : Icons.arrow_downward_rounded,
+                size: 12,
+                color: isOverBudget
+                    ? const Color(0xFFEF4444)
+                    : const Color(0xFF10B981),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  isOverBudget
+                      ? '₹${NumberFormat('#,##0').format(remaining.abs())} over budget'
+                      : '₹${NumberFormat('#,##0').format(remaining)} left',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isOverBudget
+                        ? const Color(0xFFEF4444)
+                        : (isDark ? Colors.white70 : Colors.grey[700]),
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: category.percentage / 100,
-              backgroundColor: isDark ? Colors.white12 : Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation<Color>(Color(category.color)),
-              minHeight: 6,
+            borderRadius: BorderRadius.circular(6),
+            child: Stack(
+              children: [
+                Container(
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white10 : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: (category.percentage / 100).clamp(0.0, 1.0),
+                  child: Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: isOverBudget
+                            ? [const Color(0xFFEF4444), const Color(0xFFDC2626)]
+                            : isNearLimit
+                                ? [const Color(0xFFFBBF24), const Color(0xFFF59E0B)]
+                                : [Color(category.color), Color(category.color).withOpacity(0.7)],
+                      ),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

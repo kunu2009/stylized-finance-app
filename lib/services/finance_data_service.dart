@@ -95,6 +95,7 @@ class FinanceDataService {
     if (_categories.isEmpty) {
       _categories = List.from(_defaultCategories);
       await _loadCustomCategories();
+      await _loadCategoryBudgets();
     }
   }
 
@@ -212,6 +213,75 @@ class FinanceDataService {
       
       // Note: Category spending update would need a mutable category model
       // For now, we'll handle this in the UI layer
+    }
+  }
+
+  // Update category budget
+  Future<void> updateCategoryBudget(String categoryName, double newBudget) async {
+    final index = _categories.indexWhere((c) => c.name == categoryName);
+    if (index != -1) {
+      final category = _categories[index];
+      _categories[index] = Category(
+        id: category.id,
+        name: category.name,
+        icon: category.icon,
+        color: category.color,
+        budgetAmount: newBudget,
+        type: category.type,
+        isCustom: category.isCustom,
+      );
+      
+      // Save to SharedPreferences for persistence
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final budgetsMap = <String, double>{};
+        
+        // Load existing budgets
+        final budgetsJson = prefs.getString('category_budgets');
+        if (budgetsJson != null) {
+          final decoded = json.decode(budgetsJson) as Map<String, dynamic>;
+          decoded.forEach((key, value) {
+            budgetsMap[key] = value as double;
+          });
+        }
+        
+        // Update budget
+        budgetsMap[categoryName] = newBudget;
+        
+        // Save back
+        await prefs.setString('category_budgets', json.encode(budgetsMap));
+      } catch (e) {
+        print('Error saving category budget: $e');
+      }
+    }
+  }
+
+  // Load category budgets from SharedPreferences
+  Future<void> _loadCategoryBudgets() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final budgetsJson = prefs.getString('category_budgets');
+      
+      if (budgetsJson != null) {
+        final Map<String, dynamic> budgetsMap = json.decode(budgetsJson);
+        
+        for (int i = 0; i < _categories.length; i++) {
+          final category = _categories[i];
+          if (budgetsMap.containsKey(category.name)) {
+            _categories[i] = Category(
+              id: category.id,
+              name: category.name,
+              icon: category.icon,
+              color: category.color,
+              budgetAmount: budgetsMap[category.name] as double,
+              type: category.type,
+              isCustom: category.isCustom,
+            );
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading category budgets: $e');
     }
   }
 
