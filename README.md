@@ -2,6 +2,24 @@
 
 ![7K Money Logo](web/icons/logo-7k.svg)
 
+## 🎉 What's New in v1.0.0+6
+
+### 📱 Direct APK Download
+Download and install 7K Money directly from the landing page - no Google Play Store needed!
+- Direct APK download button
+- Installation instructions included
+- Works on all Android devices (5.0+)
+
+### 💼 Monthly Salary Tracker (NEW!)
+Perfect for salary workers! Track your monthly income and expenses automatically.
+- Set monthly salary amount and payment date
+- Automatic expense deduction
+- Real-time remaining balance
+- Smart daily budget recommendations
+- Color-coded spending indicators (Green/Orange/Red)
+
+👉 **[See What's New](WHATS_NEW.md)** for complete details!
+
 ## 🚀 Live Demo
 
 Visit the live site: [7K Money Landing Page](https://your-vercel-url.vercel.app)
@@ -13,6 +31,7 @@ Visit the live site: [7K Money Landing Page](https://your-vercel-url.vercel.app)
 ### ✨ Features
 
 - 📊 Smart Dashboard
+- 💼 **Salary Tracker** (NEW!)
 - 💰 Budget Management
 - 📈 Detailed Statistics
 - 🔄 Transaction History

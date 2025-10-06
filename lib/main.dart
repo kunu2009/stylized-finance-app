@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/main_screen.dart';
 import 'services/theme_service.dart';
 import 'services/recurring_service.dart';
+import 'services/salary_service.dart';
 import 'utils/data_preloader.dart';
 
 void main() async {
@@ -11,6 +12,10 @@ void main() async {
   // Process any due recurring transactions
   final recurringService = RecurringService();
   await recurringService.processDueTransactions();
+  
+  // Initialize salary service
+  final salaryService = SalaryService();
+  await salaryService.initialize();
   
   runApp(const FinanceTrackerApp());
 }

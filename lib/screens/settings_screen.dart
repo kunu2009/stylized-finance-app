@@ -6,6 +6,7 @@ import '../utils/data_preloader.dart';
 import 'recurring_screen.dart';
 import 'reminders_screen.dart';
 import 'manage_categories_screen.dart';
+import 'salary_management_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -100,6 +101,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
+                );
+              },
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Salary Management
+            _buildSettingCard(
+              icon: Icons.account_balance_wallet,
+              title: 'Salary Management',
+              subtitle: 'Track monthly salary and expenses',
+              color: const Color(0xFF06D6A0),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SalaryManagementScreen()),
                 );
               },
             ),

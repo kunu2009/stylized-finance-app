@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/finance_models.dart';
+import '../models/salary_model.dart';
 import '../services/finance_data_service.dart';
 import '../services/reminder_service.dart';
+import '../services/salary_service.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/statistics_card.dart';
 import '../widgets/savings_goal_card.dart';
@@ -13,6 +15,7 @@ import 'reminders_screen.dart';
 import 'search_screen.dart';
 import 'all_transactions_screen.dart';
 import 'lending_manager_screen.dart';
+import 'salary_management_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -24,9 +27,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final FinanceDataService _dataService = FinanceDataService();
   final ReminderService _reminderService = ReminderService();
+  final SalaryService _salaryService = SalaryService();
   FinancialSummary _summary = FinancialSummary();
   List<Transaction> _recentTransactions = [];
   List<SavingsGoal> _savingsGoals = [];
+  SalaryExpenseTracker? _salaryTracker;
 
   @override
   void initState() {
@@ -36,6 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _initializeData() async {
     await _dataService.initializeData();
+    await _salaryService.initialize();
     _refreshData();
   }
 
@@ -44,6 +50,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _summary = _dataService.getFinancialSummary();
       _recentTransactions = _dataService.getRecentTransactions();
       _savingsGoals = _dataService.savingsGoals;
+      _salaryTracker = _salaryService.getCurrentExpenseTracker(
+        _dataService.transactions.toList(),
+      );
     });
   }
 
@@ -296,6 +305,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 balance: _summary.totalBalance,
                 onAddPressed: _navigateToAddTransaction,
               ),
+              
+              const SizedBox(height: 20),
+              
+              // Salary Tracker Card (if salary is set)
+              if (_salaryTracker != null) ...[
+                _buildSalaryTrackerCard(_salaryTracker!, isDark),
+                const SizedBox(height: 10),
+              ],
               
               const SizedBox(height: 30),
               
@@ -661,6 +678,205 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSalaryTrackerCard(SalaryExpenseTracker tracker, bool isDark) {
+    final percentageSpent = tracker.spentPercentage.clamp(0.0, 100.0);
+    final isWarning = percentageSpent > 80 && !tracker.isOverspent;
+    
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SalaryManagementScreen(),
+          ),
+        ).then((_) => _refreshData());
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: tracker.isOverspent
+                ? [const Color(0xFFDC2626), const Color(0xFFEF4444)]
+                : isWarning
+                    ? [const Color(0xFFEA580C), const Color(0xFFF97316)]
+                    : [const Color(0xFF059669), const Color(0xFF10B981)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: (tracker.isOverspent 
+                  ? const Color(0xFFDC2626)
+                  : isWarning
+                      ? const Color(0xFFEA580C)
+                      : const Color(0xFF059669)).withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Monthly Salary',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('MMM yyyy').format(tracker.salary.month),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Icon(
+                  tracker.isOverspent 
+                      ? Icons.warning_rounded 
+                      : isWarning
+                          ? Icons.warning_amber_rounded
+                          : Icons.check_circle_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tracker.isOverspent ? 'Overspent' : 'Remaining',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '₹ ${NumberFormat('#,##0').format(tracker.remainingAmount.abs())}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'of ₹ ${NumberFormat('#,##0').format(tracker.salary.amount)}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        '${percentageSpent.toStringAsFixed(0)}%',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Text(
+                        'spent',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Progress Bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: (percentageSpent / 100).clamp(0.0, 1.0),
+                backgroundColor: Colors.white.withOpacity(0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                minHeight: 6,
+              ),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Footer info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${tracker.daysRemaining} days left',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  'Daily: ₹${NumberFormat('#,##0').format(tracker.recommendedDailyBudget)}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
