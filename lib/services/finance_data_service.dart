@@ -149,23 +149,26 @@ class FinanceDataService {
   }
 
   // Add transaction
-  void addTransaction(Transaction transaction) {
+  Future<void> addTransaction(Transaction transaction) async {
     _transactions.add(transaction);
     _transactions.sort((a, b) => b.date.compareTo(a.date));
+    await saveTransactions();
   }
 
   // Update transaction
-  void updateTransaction(Transaction updatedTransaction) {
+  Future<void> updateTransaction(Transaction updatedTransaction) async {
     final index = _transactions.indexWhere((t) => t.id == updatedTransaction.id);
     if (index != -1) {
       _transactions[index] = updatedTransaction;
       _transactions.sort((a, b) => b.date.compareTo(a.date));
+      await saveTransactions();
     }
   }
 
   // Delete transaction
-  void deleteTransaction(String id) {
+  Future<void> deleteTransaction(String id) async {
     _transactions.removeWhere((t) => t.id == id);
+    await saveTransactions();
   }
 
   // Add category
@@ -286,11 +289,89 @@ class FinanceDataService {
   }
 
   // Clear all data
-  void clearAllData() {
+  Future<void> clearAllData() async {
     _transactions.clear();
     _savingsGoals.clear();
     _lendBorrowRecords.clear();
     _categories = List.from(_defaultCategories);
+    await saveTransactions();
+  }
+
+  // Save transactions to SharedPreferences
+  Future<void> saveTransactions() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final transactionsJson = json.encode(
+        _transactions.map((t) => {
+          'id': t.id,
+          'title': t.title,
+          'amount': t.amount,
+          'category': t.category,
+          'date': t.date.toIso8601String(),
+          'type': t.type.toString().split('.').last,
+          'description': t.description,
+          'contactName': t.contactName,
+        }).toList(),
+      );
+      await prefs.setString('transactions', transactionsJson);
+    } catch (e) {
+      print('Error saving transactions: $e');
+    }
+  }
+
+  // Load transactions from SharedPreferences
+  Future<void> loadTransactions() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final transactionsJson = prefs.getString('transactions');
+      
+      if (transactionsJson != null && transactionsJson.isNotEmpty) {
+        final List<dynamic> decoded = json.decode(transactionsJson);
+        _transactions.clear();
+        
+        for (var item in decoded) {
+          // Parse transaction type
+          TransactionType type;
+          switch (item['type']) {
+            case 'income':
+              type = TransactionType.income;
+              break;
+            case 'expense':
+              type = TransactionType.expense;
+              break;
+            case 'lent':
+              type = TransactionType.lent;
+              break;
+            case 'borrowed':
+              type = TransactionType.borrowed;
+              break;
+            case 'lentReturn':
+              type = TransactionType.lentReturn;
+              break;
+            case 'borrowReturn':
+              type = TransactionType.borrowReturn;
+              break;
+            default:
+              type = TransactionType.expense;
+          }
+          
+          _transactions.add(Transaction(
+            id: item['id'],
+            title: item['title'],
+            amount: (item['amount'] as num).toDouble(),
+            category: item['category'],
+            date: DateTime.parse(item['date']),
+            type: type,
+            description: item['description'] ?? '',
+            contactName: item['contactName'],
+          ));
+        }
+        
+        _transactions.sort((a, b) => b.date.compareTo(a.date));
+      }
+    } catch (e) {
+      print('Error loading transactions: $e');
+    }
   }
 
   // ==================== Custom Categories Management ====================

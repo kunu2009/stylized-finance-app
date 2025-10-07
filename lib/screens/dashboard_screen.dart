@@ -88,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
 
     if (confirm == true) {
-      _dataService.deleteTransaction(transaction.id);
+      await _dataService.deleteTransaction(transaction.id);
       _refreshData();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

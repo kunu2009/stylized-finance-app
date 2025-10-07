@@ -479,7 +479,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     }
   }
 
-  void _saveTransaction() {
+  Future<void> _saveTransaction() async {
     if (_formKey.currentState!.validate()) {
       // Validate category for income/expense
       if ((_selectedType == TransactionType.income || _selectedType == TransactionType.expense) &&
@@ -502,7 +502,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         contactName: _contactController.text.isEmpty ? null : _contactController.text,
       );
 
-      _dataService.addTransaction(transaction);
+      await _dataService.addTransaction(transaction);
       
       Navigator.pop(context, true); // Return true to indicate transaction was added
     }

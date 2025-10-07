@@ -49,7 +49,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
     );
 
     if (confirm == true) {
-      _dataService.deleteTransaction(transaction.id);
+      await _dataService.deleteTransaction(transaction.id);
       _loadTransactions();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

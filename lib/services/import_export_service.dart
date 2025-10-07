@@ -128,7 +128,7 @@ class ImportExportService {
       
       // Add transactions to data service
       for (final transaction in transactions) {
-        _dataService.addTransaction(transaction);
+        await _dataService.addTransaction(transaction);
       }
 
       // Show success message

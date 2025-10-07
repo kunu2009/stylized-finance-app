@@ -3,11 +3,14 @@ import 'screens/main_screen.dart';
 import 'services/theme_service.dart';
 import 'services/recurring_service.dart';
 import 'services/salary_service.dart';
-import 'utils/data_preloader.dart';
+import 'services/finance_data_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DataPreloader.loadSampleData();
+  
+  // Load saved data instead of sample data
+  final dataService = FinanceDataService();
+  await dataService.loadTransactions();
   
   // Process any due recurring transactions
   final recurringService = RecurringService();

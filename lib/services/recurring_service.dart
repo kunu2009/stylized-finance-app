@@ -53,7 +53,7 @@ class RecurringService {
         description: '${recurring.description} (Recurring)',
       );
 
-      _dataService.addTransaction(transaction);
+      await _dataService.addTransaction(transaction);
 
       // Update last processed date
       final updated = recurring.copyWith(lastProcessed: DateTime.now());
