@@ -1,16 +1,42 @@
 <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Circle -->
-  <circle cx="96" cy="96" r="96" fill="#f5f5f5"/>
+  <!-- Modern Gradient Background -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34d399;stop-opacity:1" />
+    </linearGradient>
+  </defs>
   
-  <!-- Money Bag -->
-  <ellipse cx="96" cy="130" rx="45" ry="50" fill="#2C5F7D"/>
-  <path d="M 70 95 Q 65 85 70 75 L 80 70 Q 96 65 112 70 L 122 75 Q 127 85 122 95 Z" fill="#2C5F7D"/>
-  <circle cx="96" cy="85" r="8" fill="#1a3a4d"/>
+  <!-- Background with rounded square -->
+  <rect width="192" height="192" rx="42" fill="url(#bgGrad)"/>
   
-  <!-- Dollar Sign on Bag -->
-  <text x="96" y="145" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#1a3a4d" text-anchor="middle">$</text>
+  <!-- Decorative circles -->
+  <circle cx="160" cy="32" r="24" fill="white" opacity="0.1"/>
+  <circle cx="32" cy="160" r="32" fill="white" opacity="0.1"/>
   
-  <!-- 7K Text -->
-  <text x="50" y="90" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#0f172a" text-anchor="start">7</text>
-  <text x="110" y="90" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#0f172a" text-anchor="start">K</text>
+  <!-- Modern 7K Text -->
+  <text x="96" y="100" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="72" font-weight="900" fill="url(#textGrad)" text-anchor="middle" dominant-baseline="middle">7K</text>
+  
+  <!-- Money Symbol with modern style -->
+  <g transform="translate(96, 135)">
+    <!-- Coin stack representation -->
+    <ellipse cx="0" cy="0" rx="28" ry="8" fill="url(#accentGrad)" opacity="0.9"/>
+    <ellipse cx="0" cy="-6" rx="28" ry="8" fill="url(#accentGrad)"/>
+    <rect x="-28" y="-6" width="56" height="6" fill="url(#accentGrad)"/>
+    
+    <!-- Dollar sign -->
+    <text x="0" y="5" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">₹</text>
+  </g>
+  
+  <!-- Accent Line -->
+  <rect x="48" y="116" width="96" height="3" rx="1.5" fill="white" opacity="0.4"/>
 </svg>
